@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pusp Raj Shah - Landing Page</title>
+
+  <!-- Fixed Google-Fonts link -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 25px 60px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      background: linear-gradient(to right, #a855f7, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    nav a {
+      margin-left: 25px;
+      text-decoration: none;
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #fff;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 100px 20px;
+    }
+
+    h1 {
+      font-size: 50px;
+      font-weight: 800;
+      background: linear-gradient(to right, #a855f7, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 20px;
+      max-width: 700px;
+      margin-bottom: 40px;
+      color: #94a3b8;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      font-size: 16px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .explore-btn {
+      background: linear-gradient(to right, #9333ea, #3b82f6);
+      color: white;
+    }
+
+    .contact-btn {
+      background: transparent;
+      border: 1px solid #94a3b8;
+      color: #94a3b8;
+    }
+
+    .contact-btn:hover {
+      background-color: #1e293b;
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: #94a3b8; /* improved contrast */
+      font-size: 14px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #1e293b;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.1);
+    }
+
+    .modal-content h2 {
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .modal-content input,
+    .modal-content textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #334155;
+      color: #fff;
+    }
+
+    .modal-content button {
+      padding: 10px 20px;
+      border: none;
+      background: linear-gradient(to right, #9333ea, #3b82f6);
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .close {
+      float: right;
+      font-size: 24px;
+      color: #ccc;
+      cursor: pointer;
+      margin-top: -10px;
+    }
+
+    .close:hover {
+      color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .main h1 {
+        font-size: 38px;
+      }
+
+      .main p {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">Pusp Raj Shah</div>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <section class="main" id="home">
+      <h1>Hi, I'm Pusp Raj Shah</h1>
+      <p>
+        a passionate web developer who loves turning ideas into interactive and user-friendly digital experiences using HTML, CSS, and JavaScript.
+      </p>
+
+      <div class="buttons">
+        <!-- Changed to smooth scroll instead of opening the same file -->
+        <button class="btn explore-btn" onclick="location.href='#portfolio'">Explore</button>
+        <button class="btn contact-btn" onclick="openModal()">Contact Me</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Contact Form Modal -->
+  <div class="modal" id="contactModal">
+    <div class="modal-content">
+      <span class="close" tabindex="0" onclick="closeModal()">&times;</span>
+      <h2>Contact Me</h2>
+      <!-- Prevents page reload and gives user feedback -->
+      <form onsubmit="event.preventDefault(); alert('Thanks! Your message has been sent.'); closeModal();">
+        <input type="text" placeholder="Your Name" required />
+        <input type="email" placeholder="Your Email" required />
+        <textarea rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer id="contact">
+    &copy; 2025 Pusp Raj Shah. All Rights Reserved.
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    function openModal() {
+      document.getElementById('contactModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('contactModal').style.display = 'none';
+    }
+
+    // Close modal on outside click or ESC key
+    window.onclick = function (event) {
+      const modal = document.getElementById('contactModal');
+      if (event.target === modal) modal.style.display = 'none';
+    };
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>
