@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pusp Raj Shah's Portfolio</title>
+
+  <!-- Fixed Google-Fonts import -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:#0e0e2c;
+      color:#fff;
+      line-height:1.6;
+    }
+    nav{
+      background:#1f1f3d;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:1rem 3rem;
+      position:sticky;top:0;z-index:1000;
+    }
+    nav .logo{
+      font-size:1.8rem;
+      font-weight:700;
+      color:#fff;
+    }
+    nav ul{list-style:none;display:flex;gap:30px}
+    nav ul li a{color:#fff;text-decoration:none;font-weight:500;transition:.3s}
+    nav ul li a:hover{color:#a7a7ff}
+    .container{padding:60px 10%}
+    .hero{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:2rem}
+    .hero .left{flex:1}
+    .hero .left h1{font-size:2.5rem;margin-bottom:10px}
+    .hero .left p{font-size:1.2rem}
+    .hero .right{flex:1;display:flex;justify-content:center}
+    .hero img{width:70%;border-radius:20px}
+    h2.section-title{margin-top:50px;font-size:2rem;color:#a7a7ff;border-bottom:2px solid #a7a7ff;padding-bottom:5px;margin-bottom:20px}
+    .skills,.projects,.certifications{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+    .card{background:#1c1c3c;padding:20px;border-radius:10px;transition:.3s}
+    .card:hover{transform:translateY(-5px);background:#292952}
+    footer{text-align:center;padding:30px;background:#1f1f3d;color:#aaa;margin-top:60px}
+    @media(max-width:768px){
+      .hero{flex-direction:column;text-align:center}
+      .hero img{width:90%}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">Pusp Raj Shah</div>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#certifications">Certifications</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <div class="container">
+    <section id="home" class="hero">
+      <div class="left">
+        <h1>Hello, I'm <span style="color:#ff4ecd">Pusp Raj Shah</span></h1>
+        <p>A passionate B.Tech CSE student exploring Web Development, AI, and beyond.</p>
+      </div>
+      <div class="right">
+        <img src="profile.jpg" alt="Profile Photo">
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <h2 class="section-title" id="skills">Technical Skills</h2>
+    <div class="skills">
+      <div class="card">HTML, CSS, JavaScript</div>
+      <div class="card">Python</div>
+      <div class="card">C++</div>
+      <div class="card">AI Basics</div>
+      <div class="card">Git & GitHub</div>
+    </div>
+
+    <!-- Projects -->
+    <h2 class="section-title" id="projects">Projects</h2>
+    <div class="projects">
+      <div class="card">Sign Language Detection using ML</div>
+      <div class="card">Memory Usage Tracker (Shell Script)</div>
+      <div class="card">Restaurant Management System (DBMS)</div>
+      <div class="card">This Portfolio Website</div>
+    </div>
+
+    <!-- Certifications -->
+    <h2 class="section-title" id="certifications">Certifications</h2>
+    <div class="certifications">
+      <div class="card">CodSoft Internship – C++</div>
+      <div class="card">YBI Foundation Internship – Python</div>
+      <div class="card">mirai school of tech – AI & ML</div>
+    </div>
+
+    <!-- Contact -->
+    <h2 class="section-title" id="contact">Contact</h2>
+    <p style="font-size:1.1rem">
+      📧 pusprajshah9841@gmail.com<br>
+      📞 +91 9473033787
+    </p>
+  </div>
+
+  <footer>
+    made by Pusp Raj Shah<br>
+    &copy; 2025 | All rights reserved
+  </footer>
+</body>
+</html>
