@@ -1,0 +1,733 @@
+import { useState, useEffect } from "react";
+import { Search, MapPin, Building, Clock, Calendar, ChevronDown, Heart, BookmarkPlus, ArrowUpRight, Check, X, DollarSign, Briefcase, Users, Filter, Star, AlertCircle, ExternalLink, Share2, BookmarkCheck, Bookmark } from "lucide-react";
+import Header from "../header/Header";
+import Footer from "../Home/Footer/footer";
+
+const JobSearchResults = () => {
+  const [selectedJob, setSelectedJob] = useState("ui-ux-designer");
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isFiltering, setIsFiltering] = useState(false);
+  
+  // Multi-select filter states
+  const [filters, setFilters] = useState({
+    jobType: [],
+    location: [],
+    experience: [],
+    salary: [],
+    companyType: []
+  });
+
+  // Sample data for filters
+  const filterOptions = {
+    jobType: ["Full-time", "Part-time", "Contract", "Internship", "Remote"],
+    location: ["Remote", "Austin, TX", "London", "New York", "San Francisco", "Tuscon, AZ", "Santa Ana, CA"],
+    experience: ["Entry Level", "Mid Level", "Senior", "Lead", "Manager"],
+    salary: ["$50K-$70K", "$70K-$100K", "$100K-$130K", "$130K+"],
+    companyType: ["Startup", "Enterprise", "Agency", "Consulting Firm", "Non-profit"]
+  };
+
+  // Sample job data
+  const jobsData = [
+    {
+      id: "ui-ux-designer",
+      title: "UI / UX Designer",
+      company: "Laborum Company",
+      logo: "gradient-blue",
+      salary: "$80K - $100K",
+      jobType: "Full-time",
+      location: "Remote",
+      onsite: false,
+      companyType: "IT Company",
+      experience: "Mid Level"
+    },
+    {
+      id: "senior-uiux",
+      title: "Senior UI/UX Designer",
+      company: "RocketLaunch Inc",
+      logo: "yellow-emoji",
+      salary: "$120K - $150K",
+      jobType: "Contract",
+      location: "London",
+      onsite: true,
+      companyType: "Consulting Firm",
+      experience: "Senior"
+    },
+    {
+      id: "ui-developer",
+      title: "UI Developer",
+      company: "PinkDot Systems",
+      logo: "pink-dots",
+      salary: "$95K - $115K",
+      jobType: "Full-time",
+      location: "Austin, TX",
+      onsite: true,
+      companyType: "Enterprise",
+      experience: "Mid Level"
+    },
+    {
+      id: "ui-ux-designer-figma",
+      title: "UI / UX Designer",
+      company: "ColorSquare",
+      logo: "green-grid",
+      salary: "$75K - $95K",
+      jobType: "Full-time",
+      location: "Santa Ana, CA",
+      onsite: true,
+      companyType: "Startup",
+      experience: "Mid Level"
+    }
+  ];
+
+  // Filtered jobs based on search query and filters
+  const [filteredJobs, setFilteredJobs] = useState(jobsData);
+
+  // Handle job filtering
+  useEffect(() => {
+    let results = jobsData;
+    
+    // Filter by search query
+    if (searchQuery) {
+      results = results.filter(job => 
+        job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.company.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    // Apply multi-select filters
+    Object.keys(filters).forEach(filterKey => {
+      if (filters[filterKey].length > 0) {
+        results = results.filter(job => {
+          // Match job property with filter key
+          const jobProperty = filterKey === 'jobType' ? job.jobType :
+                              filterKey === 'location' ? job.location :
+                              filterKey === 'experience' ? job.experience :
+                              filterKey === 'salary' ? job.salary :
+                              filterKey === 'companyType' ? job.companyType : '';
+          
+          return filters[filterKey].includes(jobProperty);
+        });
+      }
+    });
+    
+    setFilteredJobs(results);
+  }, [searchQuery, filters]);
+
+  // Toggle job save/bookmark
+  const toggleSaveJob = (jobId) => {
+    if (savedJobs.includes(jobId)) {
+      setSavedJobs(savedJobs.filter(id => id !== jobId));
+    } else {
+      setSavedJobs([...savedJobs, jobId]);
+    }
+  };
+
+  // Toggle filter selection
+  const toggleFilter = (category, value) => {
+    if (filters[category].includes(value)) {
+      setFilters({
+        ...filters,
+        [category]: filters[category].filter(item => item !== value)
+      });
+    } else {
+      setFilters({
+        ...filters,
+        [category]: [...filters[category], value]
+      });
+    }
+  };
+
+  // Clear all filters
+  const clearAllFilters = () => {
+    setFilters({
+      jobType: [],
+      location: [],
+      experience: [],
+      salary: [],
+      companyType: []
+    });
+    setSearchQuery("");
+  };
+
+  // Get active filters count
+  const getActiveFiltersCount = () => {
+    return Object.values(filters).reduce((count, filterArray) => count + filterArray.length, 0);
+  };
+
+  // Render company logo based on type
+  const renderLogo = (logoType) => {
+    switch(logoType) {
+      case 'gradient-blue':
+        return (
+          <div className="w-10 h-10 rounded flex items-center justify-center bg-gradient-to-br from-blue-400 to-purple-500">
+            <div className="w-6 h-6 bg-white rounded transform rotate-45"></div>
+          </div>
+        );
+      case 'yellow-emoji':
+        return (
+          <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-xl">
+            🚀
+          </div>
+        );
+      case 'pink-dots':
+        return (
+          <div className="w-10 h-10 rounded flex items-center justify-center bg-pink-100">
+            <div className="flex space-x-0.5">
+              <div className="w-2 h-2 rounded-full bg-pink-500"></div>
+              <div className="w-2 h-2 rounded-full bg-pink-500"></div>
+              <div className="w-2 h-2 rounded-full bg-pink-500"></div>
+            </div>
+          </div>
+        );
+      case 'green-grid':
+        return (
+          <div className="w-10 h-10 rounded flex items-center justify-center bg-green-100">
+            <div className="grid grid-cols-2 gap-0.5">
+              <div className="w-2 h-2 rounded-sm bg-green-500"></div>
+              <div className="w-2 h-2 rounded-sm bg-yellow-500"></div>
+              <div className="w-2 h-2 rounded-sm bg-blue-500"></div>
+              <div className="w-2 h-2 rounded-sm bg-red-500"></div>
+            </div>
+          </div>
+        );
+      default:
+        return (
+          <div className="w-10 h-10 rounded bg-gray-200 flex items-center justify-center">
+            <Building size={20} />
+          </div>
+        );
+    }
+  };
+
+  return (
+    <>
+      <Header/>
+      <div className="max-w-6xl mx-auto bg-white font-sans p-6">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold mb-4">Search Jobs</h1>
+          
+          {/* Search and Filter Bar */}
+          <div className="flex flex-col md:flex-row gap-3 mb-4">
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                <Search size={16} className="text-gray-400" />
+              </div>
+              <input 
+                type="text" 
+                placeholder="Search jobs, skills, or companies"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            
+            <div className="flex gap-2">
+              <button 
+                className={`flex items-center gap-1 px-3 py-2 border rounded-md ${isFiltering ? 'bg-teal-50 border-teal-500 text-teal-500' : 'border-gray-300'}`}
+                onClick={() => setIsFiltering(!isFiltering)}
+              >
+                <Filter size={16} />
+                <span>Filters</span>
+                {getActiveFiltersCount() > 0 && (
+                  <span className="inline-flex items-center justify-center w-5 h-5 ml-1 bg-teal-500 text-white text-xs rounded-full">
+                    {getActiveFiltersCount()}
+                  </span>
+                )}
+              </button>
+              
+              {getActiveFiltersCount() > 0 && (
+                <button 
+                  className="text-teal-500 font-medium px-3 py-2 border border-transparent"
+                  onClick={clearAllFilters}
+                >
+                  Clear All
+                </button>
+              )}
+            </div>
+          </div>
+          
+          {/* Filter Dropdown */}
+          {isFiltering && (
+            <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4 shadow-lg">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                {/* Job Type Filter */}
+                <div>
+                  <h3 className="font-medium mb-2 text-sm">Job Type</h3>
+                  <div className="space-y-2">
+                    {filterOptions.jobType.map(option => (
+                      <label key={`job-${option}`} className="flex items-center text-sm cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          className="mr-2 h-4 w-4 text-teal-500"
+                          checked={filters.jobType.includes(option)}
+                          onChange={() => toggleFilter('jobType', option)}
+                        />
+                        {option}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Location Filter */}
+                <div>
+                  <h3 className="font-medium mb-2 text-sm">Location</h3>
+                  <div className="space-y-2">
+                    {filterOptions.location.map(option => (
+                      <label key={`loc-${option}`} className="flex items-center text-sm cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          className="mr-2 h-4 w-4 text-teal-500"
+                          checked={filters.location.includes(option)}
+                          onChange={() => toggleFilter('location', option)}
+                        />
+                        {option}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Experience Filter */}
+                <div>
+                  <h3 className="font-medium mb-2 text-sm">Experience</h3>
+                  <div className="space-y-2">
+                    {filterOptions.experience.map(option => (
+                      <label key={`exp-${option}`} className="flex items-center text-sm cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          className="mr-2 h-4 w-4 text-teal-500"
+                          checked={filters.experience.includes(option)}
+                          onChange={() => toggleFilter('experience', option)}
+                        />
+                        {option}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Salary Filter */}
+                <div>
+                  <h3 className="font-medium mb-2 text-sm">Salary Range</h3>
+                  <div className="space-y-2">
+                    {filterOptions.salary.map(option => (
+                      <label key={`salary-${option}`} className="flex items-center text-sm cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          className="mr-2 h-4 w-4 text-teal-500"
+                          checked={filters.salary.includes(option)}
+                          onChange={() => toggleFilter('salary', option)}
+                        />
+                        {option}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Company Type Filter */}
+                <div>
+                  <h3 className="font-medium mb-2 text-sm">Company Type</h3>
+                  <div className="space-y-2">
+                    {filterOptions.companyType.map(option => (
+                      <label key={`company-${option}`} className="flex items-center text-sm cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          className="mr-2 h-4 w-4 text-teal-500"
+                          checked={filters.companyType.includes(option)}
+                          onChange={() => toggleFilter('companyType', option)}
+                        />
+                        {option}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 border-t pt-4 flex justify-between">
+                <button 
+                  className="text-gray-500"
+                  onClick={() => setIsFiltering(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="bg-teal-500 text-white px-4 py-2 rounded-md"
+                  onClick={() => setIsFiltering(false)}
+                >
+                  Apply Filters
+                </button>
+              </div>
+            </div>
+          )}
+          
+          <div className="flex justify-between items-center">
+            <p className="text-sm text-gray-500">Showing {filteredJobs.length} jobs</p>
+            <div className="flex gap-2 text-sm">
+              <button className="text-gray-500 flex items-center">
+                <Clock size={14} className="mr-1" />
+                Newest first
+              </button>
+              <span className="text-gray-300">|</span>
+              <button className="text-gray-500 flex items-center">
+                <DollarSign size={14} className="mr-1" />
+                Salary
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Main Content */}
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Left Sidebar - Job List */}
+          <div className="w-full md:w-1/3">
+            {filteredJobs.length > 0 ? (
+              <>
+                {filteredJobs.map(job => (
+                  <div 
+                    key={job.id}
+                    className={`border rounded-lg mb-3 cursor-pointer hover:border-teal-300 transition-colors ${selectedJob === job.id ? "border-teal-500 shadow-sm" : "border-gray-200"}`}
+                    onClick={() => handleJobSelect(job.id)}
+                  >
+                    <div className="p-3 border-b border-gray-100">
+                      <div className="flex">
+                        <div className="mr-3">
+                          {renderLogo(job.logo)}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-medium">{job.title}</h3>
+                          <p className="text-sm text-gray-500">{job.salary}</p>
+                          <p className="text-xs text-gray-400 mt-1">{job.company}</p>
+                        </div>
+                        <button 
+                          className={`w-8 h-8 flex items-center justify-center rounded-full ${savedJobs.includes(job.id) ? "bg-pink-100 text-pink-500" : "bg-gray-100 text-gray-400"}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleSaveJob(job.id);
+                          }}
+                        >
+                          {savedJobs.includes(job.id) ? <Heart size={16} fill="currentColor" /> : <Heart size={16} />}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="p-2">
+                      <div className="flex flex-wrap gap-2 text-xs">
+                        <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded flex items-center">
+                          <Clock size={12} className="mr-1" />
+                          {job.jobType}
+                        </span>
+                        <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded flex items-center">
+                          <MapPin size={12} className="mr-1" />
+                          {job.location}
+                        </span>
+                        <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded flex items-center">
+                          {job.onsite ? (
+                            <>
+                              <Check size={12} className="mr-1" />
+                              On-site
+                            </>
+                          ) : (
+                            <>
+                              <X size={12} className="mr-1" />
+                              On-site
+                            </>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <button className="text-teal-500 font-medium flex items-center justify-center w-full py-2 mt-2 hover:bg-teal-50 rounded-md transition-colors">
+                  Show more
+                </button>
+              </>
+            ) : (
+              <div className="border border-gray-200 rounded-lg p-8 text-center">
+                <div className="flex justify-center mb-4">
+                  <AlertCircle size={48} className="text-gray-300" />
+                </div>
+                <h3 className="font-medium text-lg mb-2">No matching jobs found</h3>
+                <p className="text-gray-500 mb-4">Try adjusting your search criteria or filters</p>
+                <button 
+                  className="text-teal-500 font-medium"
+                  onClick={clearAllFilters}
+                >
+                  Clear all filters
+                </button>
+              </div>
+            )}
+          </div>
+          
+          {/* Right Content - Job Details */}
+          <div className="w-full md:w-2/3">
+            {selectedJob && (
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                {/* Job Header with Image */}
+                <div className="relative w-full h-40 bg-blue-500 overflow-hidden">
+                  <img src="/api/placeholder/800/160" alt="Office Building" className="w-full h-full object-cover" />
+                </div>
+                
+                {/* Job Title */}
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="flex items-center">
+                      <div className="mr-4">
+                        {renderLogo(jobsData.find(job => job.id === selectedJob)?.logo || 'default')}
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-bold">{jobsData.find(job => job.id === selectedJob)?.title}</h2>
+                        <p className="text-sm text-gray-500">{jobsData.find(job => job.id === selectedJob)?.company}</p>
+                        <p className="text-sm font-medium mt-1">{jobsData.find(job => job.id === selectedJob)?.salary}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="flex gap-2">
+                        <button 
+                          className={`border rounded-full w-8 h-8 flex items-center justify-center ${savedJobs.includes(selectedJob) ? "bg-pink-100 border-pink-300 text-pink-500" : "border-gray-300 text-gray-600"}`}
+                          onClick={() => toggleSaveJob(selectedJob)}
+                        >
+                          {savedJobs.includes(selectedJob) ? <Heart size={16} fill="currentColor" /> : <Heart size={16} />}
+                        </button>
+                        <button className="border border-gray-300 text-gray-600 rounded-full w-8 h-8 flex items-center justify-center">
+                          <Share2 size={16} />
+                        </button>
+                      </div>
+                      <button className="bg-teal-500 text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-teal-600 transition-colors">
+                        Apply Now
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Job Stats and Tags */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 border-y border-gray-100 py-4">
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Experience</p>
+                      <p className="text-sm font-medium">Mid Level</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Job Type</p>
+                      <p className="text-sm font-medium">{jobsData.find(job => job.id === selectedJob)?.jobType}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Location</p>
+                      <p className="text-sm font-medium">{jobsData.find(job => job.id === selectedJob)?.location}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Posted</p>
+                      <p className="text-sm font-medium">2 days ago</p>
+                    </div>
+                  </div>
+                  
+                  {/* Contact Person */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-medium mb-3">Contact recruiter</h3>
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden mr-3">
+                        <img src="/api/placeholder/40/40" alt="Recruiter" className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Ellie Harper</p>
+                        <p className="text-sm text-gray-500">Hiring Manager</p>
+                      </div>
+                      <button className="ml-auto bg-orange-100 text-orange-600 text-xs px-3 py-1 rounded-full hover:bg-orange-200 transition-colors">
+                        Contact
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Job Description */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-medium mb-3">Job Description</h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      We are looking for a skilled & creative UI/UX designer to join our business team. Your role would involve translating business requirements into user-friendly designs & flows, working closely with the development and business teams to create visually appealing and functional designs.
+                    </p>
+                    <p className="text-sm text-gray-600 mb-4">
+                      As our UI/UX Designer, you will be responsible for delivering the complete user experience and user interface design for our digital products. You will work with product managers and engineers to create intuitive, user-centered interfaces that help our customers achieve their goals.
+                    </p>
+                  </div>
+                  
+                  {/* Requirements */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-medium mb-3">Requirements</h3>
+                    <ul className="space-y-2">
+                      <li className="flex items-start text-sm text-gray-600">
+                        <div className="w-5 h-5 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center mr-2 mt-0.5">
+                          <Check size={12} />
+                        </div>
+                        Proficiency developing in Figma, Canvas or similar tools.
+                      </li>
+                      <li className="flex items-start text-sm text-gray-600">
+                        <div className="w-5 h-5 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center mr-2 mt-0.5">
+                          <Check size={12} />
+                        </div>
+                        Confident in designing responsive layouts for both web and mobile interfaces.
+                      </li>
+                      <li className="flex items-start text-sm text-gray-600">
+                        <div className="w-5 h-5 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center mr-2 mt-0.5">
+                          <Check size={12} />
+                        </div>
+                        3+ years of experience in UI/UX design.
+                      </li>
+                      <li className="flex items-start text-sm text-gray-600">
+                        <div className="w-5 h-5 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center mr-2 mt-0.5">
+                          <Check size={12} />
+                        </div>
+                        Strong portfolio showcasing your design thinking and execution.
+                      </li>
+                    </ul>
+                    <div className="mt-4">
+                      <a href="#" className="text-teal-500 text-sm font-medium hover:underline flex items-center">
+                        View complete job offer <ExternalLink size={14} className="ml-1" />
+                      </a>
+                    </div>
+                  </div>
+                  
+                  {/* Skills Tags */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-medium mb-3">Skills</h3>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="bg-teal-50 text-teal-600 px-3 py-1 rounded-full text-sm">Figma</span>
+                      <span className="bg-teal-50 text-teal-600 px-3 py-1 rounded-full text-sm">UI Design</span>
+                      <span className="bg-teal-50 text-teal-600 px-3 py-1 rounded-full text-sm">UX Design</span>
+                      <span className="bg-teal-50 text-teal-600 px-3 py-1 rounded-full text-sm">Prototyping</span>
+                      <span className="bg-teal-50 text-teal-600 px-3 py-1 rounded-full text-sm">User Research</span>
+                      <span className="bg-teal-50 text-teal-600 px-3 py-1 rounded-full text-sm">Wireframing</span>
+                    </div>
+                  </div>
+                  
+                  {/* About Company */}
+                  <div className="mb-6">
+                    <div className="flex justify-between items-center mb-3">
+                      <h3 className="text-lg font-medium">About company</h3>
+                      <a href="#" className="text-xs text-teal-500 hover:underline">View company profile</a>
+                    </div>
+                    
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-center mb-4">
+                        <div className="w-10 h-10 rounded flex items-center justify-center bg-gradient-to-br from-yellow-400 to-orange-500 mr-3">
+                          <div className="w-6 h-6 bg-white rounded-full"></div>
+                        </div>
+                        <div>
+                          <h4 className="font-bold">LABORUM COMPANY</h4>
+                          <div className="flex items-center text-yellow-500 text-xs">
+                            <Star size={12} fill="currentColor" />
+                            <Star size={12} fill="currentColor" />
+                            <Star size={12} fill="currentColor" />
+                            <Star size={12} fill="currentColor" />
+                            <Star size={12} />
+                            <span className="text-gray-500 ml-1">4.2</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <p className="text-sm text-gray-600 mb-4">
+                        We are an innovative company, based in UK. We provide cutting-edge solutions to complex problems. We're always looking for talented individuals to join our team.
+                      </p>
+                      
+                      <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                        <div className="flex items-center">
+                          <Building size={14} className="mr-2 text-gray-400" />
+                          <span>IT Company</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Users size={14} className="mr-2 text-gray-400" />
+                          <span>500-1000 employees</span>
+                        </div>
+                        <div className="flex items-center">
+                          <MapPin size={14} className="mr-2 text-gray-400" />
+                          <span>London, UK</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Calendar size={14} className="mr-2 text-gray-400" />
+                          <span>Since 1990</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                // ...existing code...
+
+{/* Similar Jobs */}
+<div>
+  <h3 className="text-lg font-medium mb-3">Similar jobs</h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    {jobsData.filter(job => job.id !== selectedJob).slice(0, 4).map(job => (
+      <div 
+        key={job.id} 
+        className="border border-gray-200 rounded-lg p-3 hover:border-teal-300 cursor-pointer transition-colors"
+        onClick={() => setSelectedJob(job.id)}
+      >
+        <div className="flex items-start mb-2">
+          <div className="mr-3">
+            {renderLogo(job.logo)}
+          </div>
+          <div className="flex-1">
+            <h4 className="font-medium text-sm">{job.title}</h4>
+            <p className="text-xs text-gray-500">{job.company}</p>
+            <p className="text-xs font-medium mt-1">{job.salary}</p>
+          </div>
+          <button 
+            className={`w-7 h-7 flex items-center justify-center rounded-full ${
+              savedJobs.includes(job.id) ? "bg-pink-100 text-pink-500" : "bg-gray-100 text-gray-400"
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleSaveJob(job.id);
+            }}
+          >
+            {savedJobs.includes(job.id) ? 
+              <Heart size={14} fill="currentColor" /> : 
+              <Heart size={14} />
+            }
+          </button>
+        </div>
+        <div className="flex flex-wrap gap-1">
+          <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs">
+            {job.jobType}
+          </span>
+          <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs flex items-center">
+            <MapPin size={10} className="mr-1" />
+            {job.location}
+          </span>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+{/* Apply Now CTA */}
+<div className="mt-6 border-t border-gray-100 pt-6">
+  <div className="flex items-center justify-between">
+    <div>
+      <p className="text-sm text-gray-500">Interested in this job?</p>
+      <p className="font-medium">Apply before the position is filled</p>
+    </div>
+    <div className="flex gap-2">
+      <button 
+        className={`border rounded-full w-10 h-10 flex items-center justify-center ${
+          savedJobs.includes(selectedJob) ? 
+          "bg-pink-100 border-pink-300 text-pink-500" : 
+          "border-gray-300 text-gray-600"
+        }`}
+        onClick={() => toggleSaveJob(selectedJob)}
+      >
+        {savedJobs.includes(selectedJob) ? 
+          <BookmarkCheck size={20} /> : 
+          <Bookmark size={20} />
+        }
+      </button>
+      <button className="bg-teal-500 text-white px-8 py-2 rounded-md font-medium hover:bg-teal-600 transition-colors">
+        Apply Now
+      </button>
+    </div>
+  </div>
+</div>
+
+{/* Close all divs and main component */}
+          </div>
+        </div>
+      </div>
+    </div>
+    <Footer/>
+  </>
+);
+}
+
+export default JobSearchResults;
